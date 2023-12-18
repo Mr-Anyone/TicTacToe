@@ -1,8 +1,23 @@
 #include <iostream> 
 #include <SFML/Network.hpp>
 
-#include "network.hpp"
 #include "shared.hpp"
+#include"state.hpp"
+
+GameWorld::GameWorld(const NetworkPacket& packet):
+    m_state {packet}
+{
+}
+
+GameWorld::GameWorld():
+    m_state {makeNewNetworkPacket()}
+{
+}
+
+void GameWorld::updatePacket(const NetworkPacket& packet){
+    this->m_state = packet;
+}
+
 
 void sendData(){ 
     std::cout << "I am going to send some data packet" << std::endl;

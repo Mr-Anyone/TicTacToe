@@ -3,7 +3,7 @@
 #include <chrono>
 #include <SFML/Network.hpp>
 
-#include "states.hpp"
+#include "shared.hpp"
 
 constexpr long long TICK_RATE_MS = 500;
 
