@@ -4,6 +4,7 @@
 #include <vector> 
 #include <array> 
 #include <SFML/Network.hpp>
+#include <iostream>
 
 enum BoardState{
     CROSS,
@@ -31,6 +32,9 @@ struct NetworkPacket{
     Turn turn;
     Player player; 
 }; 
+
+NetworkPacket makeNewNetworkPacket();
+std::ostream& operator<<(std::ostream& os, const NetworkPacket& packet); 
 
 // useful operator overloads
 sf::Packet& operator<< (sf::Packet& packet, const BoardState& state); 

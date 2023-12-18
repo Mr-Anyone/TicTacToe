@@ -53,3 +53,37 @@ sf::Packet& operator >> (sf::Packet& packet, NetworkPacket& data){
     packet >> data.player;
     return packet;
 }
+    
+NetworkPacket makeNewNetworkPacket(){
+    NetworkPacket packet; 
+    for(int i = 0; i<3; ++i){
+        for(int j = 0; j<3; ++j){
+            packet.board[i][j] = BoardState::EMPTY;
+        }
+    }
+
+    packet.turn = Turn::CROSS_TURN; 
+    return packet;
+}
+
+std::ostream& operator<<(std::ostream& os, const NetworkPacket& packet){
+    switch(packet.player){
+        case Player::CIRCLE:
+            os << "Player: circle "; 
+            break; 
+        case Player::CROSS: 
+            os << "Player: cross  "; 
+            break;
+    }
+
+    switch(packet.turn){
+        case Turn::CIRCLE_TURN:
+            os << "Turn: circle"; 
+            break; 
+        case Turn::CROSS_TURN: 
+            os << "Turn: cross"; 
+            break;
+    }
+
+    return os;
+}

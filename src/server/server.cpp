@@ -1,37 +1,61 @@
 #include <iostream>
-#include <SFML/Network.hpp>
 #include <thread>
+#include <chrono>
+#include <SFML/Network.hpp>
 
+#include "states.hpp"
+
+constexpr long long TICK_RATE_MS = 500;
 
 int main(){
     sf::TcpListener listener;
+    NetworkPacket global_state = makeNewNetworkPacket();
 
     if (listener.listen(10000) != sf::Socket::Status::Done){
         std::cout << "I cannot be binded to address" << std::endl;
         return -1;
     }
-    
-    std::cout << "setup listener" << std::endl;
+    // waiting for players to connect
+    std::cout << "setup listener! Listener has been setup!" << std::endl;
+    sf::TcpSocket player1; 
+    sf::TcpSocket player2; 
 
-    sf::TcpSocket socket; 
-    if(listener.accept(socket) != sf::Socket::Status::Done){
-        std::cout << "I cannot accept a socket for some reason" << std::endl;
+    if(listener.accept(player1) != sf::Socket::Status::Done){
+        std::cout << "cannot accpet listener" << std::endl; 
         return -1;
     }
-
-    std::cout << "I've accepted a socket" << std::endl;
-    sf::Packet packet;
-    std::string message;
-    std::this_thread::sleep_for(std::chrono::seconds (1));
     
-    if(socket.receive(packet) == sf::Socket::Status::Done){
-        if(packet >> message){
-            std::cout << "I got your packet message: " << message << std::endl;
-        }else{
-            std::cout <<"I did not got your message" << std::endl;
+    {
+        sf::Packet packet;
+        global_state.player = Player::CIRCLE;
+        packet << global_state;
+
+        if(player1.send(packet) != sf::Socket::Status::Done){
+            std::cout << "cannot send player packet" << std::endl; 
+            return -1;
         }
     }
 
-    std::cout << "The server is now closed!" << std::endl;
+    if(listener.accept(player2) != sf::Socket::Status::Done){
+        std::cout << "cannot accpet listener" << std::endl; 
+        return -1;
+    }
+
+    {
+        sf::Packet packet;
+        global_state.player = Player::CROSS;
+        packet << global_state;
+        
+        if(player2.send(packet) != sf::Socket::Status::Done){
+            std::cout << "cannot send player packet" << std::endl; 
+            return -1;
+        }
+    }
+    
+    // enter loop
+    while(true){
+        std::cout << "I've looped" << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(TICK_RATE_MS));    
+    }
     return 0;
 }

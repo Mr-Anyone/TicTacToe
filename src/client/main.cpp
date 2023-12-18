@@ -6,8 +6,6 @@
 
 int main(){
     Board board = makeBoard();
-    // starting with cross turn
-    Turn turn = Turn::CROSS_TURN;
 
     sendData();
     // sf::Vector2u window_size  (500, 500);

@@ -1,6 +1,8 @@
-#include "network.hpp"
 #include <iostream> 
 #include <SFML/Network.hpp>
+
+#include "network.hpp"
+#include "shared.hpp"
 
 void sendData(){ 
     std::cout << "I am going to send some data packet" << std::endl;
@@ -13,14 +15,13 @@ void sendData(){
         std::cout << "cannot connect to address" << std::endl;
     }
 
-    std::string some_message = "Do you hear me?";
-    sf::Packet packet;
-    packet << some_message;
-
-    if(socket.send(packet) != sf::Socket::Status::Done){
-        std::cout << "Cannot send I see you packet" << std::endl;
-    }else{
-        std::cout << "I've send an message" << std::endl;
-    }
-
+   sf::Packet packet; 
+   NetworkPacket data;
+   if(socket.receive(packet) != sf::Socket::Status::Done){
+        std::cout << "cannot receive data for some reason" << std::endl;
+        exit(-1);
+   }
+   
+   packet >> data; 
+   std::cout << data << std::endl;
 }
