@@ -10,7 +10,6 @@ int main(){
     Turn turn = Turn::CROSS_TURN;
 
     sendData();
-    
     // sf::Vector2u window_size  (500, 500);
     // std::string window_title = "Tictactoe";
     // sf::VideoMode video_mode (window_size); 
