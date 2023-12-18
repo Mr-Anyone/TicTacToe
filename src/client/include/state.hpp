@@ -11,7 +11,8 @@ public:
     GameWorld();
     GameWorld(const NetworkPacket& packet);
     
-    void updatePacket(const NetworkPacket& packet);
+    void updatePacket(const NetworkPacket& data);
+    NetworkPacket getPacket();
 private:
     NetworkPacket m_state;
     std::mutex m_mutex;

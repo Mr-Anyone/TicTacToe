@@ -14,8 +14,10 @@ GameWorld::GameWorld():
 {
 }
 
-void GameWorld::updatePacket(const NetworkPacket& packet){
-    this->m_state = packet;
+void GameWorld::updatePacket(const NetworkPacket& data){
+    std::lock_guard<std::mutex> m (m_mutex); 
+
+    this->m_state = data;
 }
 
 
