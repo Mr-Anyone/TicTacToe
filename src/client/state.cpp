@@ -20,6 +20,12 @@ void GameWorld::updatePacket(const NetworkPacket& data){
     this->m_state = data;
 }
 
+NetworkPacket GameWorld::getPacket() { 
+    std::lock_guard<std::mutex> m (m_mutex);
+    
+    return this->m_state;
+}
+
 
 void sendData(){ 
     std::cout << "I am going to send some data packet" << std::endl;

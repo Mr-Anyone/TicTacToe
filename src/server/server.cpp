@@ -51,7 +51,6 @@ int main(){
             return -1;
         }
     }
-    
     // enter loop
     while(true){
         std::cout << "I've looped" << std::endl;
