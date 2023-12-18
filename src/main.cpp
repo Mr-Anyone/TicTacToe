@@ -1,33 +1,29 @@
 #include <iostream>
+#include<SFML/Graphics.hpp>
 #include "game.hpp"
 
 int main(){
     Board board = makeBoard();
-
-
-    // cross start first
+    // starting with cross turn
     Turn turn = Turn::CROSS_TURN;
-    while(getGameState(board) == GameState::ON_GOING){
-        printBoard(board);
+    
+    sf::Vector2u window_size  (500, 500);
+    std::string window_title = "Tictactoe";
+    sf::VideoMode video_mode (window_size); 
+    sf::RenderWindow window {video_mode, window_title};
 
-        int row, col;
-        std::cin >> row >> col;
-        
-        // putting stuff on the board
-        if(turn == Turn::CIRCLE_TURN){
-            board[row][col] = BoardState::CIRCLE;
-        }else{
-            board[row][col] = BoardState::CROSS;
+    while(window.isOpen()){
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
         }
 
-        
-        // changing turn
-        if(turn == Turn::CROSS_TURN){
-            turn = Turn::CIRCLE_TURN;
-        }else{
-            turn = Turn::CROSS_TURN;
-        }
+        window.clear(sf::Color::White);
+        window.display();
     }
 
+    std::cout << "Program ended" << std::endl; 
     return 0;
 }
