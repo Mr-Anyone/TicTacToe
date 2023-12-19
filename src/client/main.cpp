@@ -19,7 +19,6 @@ void background_update(std::shared_ptr<sf::TcpSocket> socket, std::shared_ptr<Ga
     packet >> data; 
     game_world->updatePacket(data);
     std::cout << "I got data: " << data << std::endl;
-    printBoard(data.board); 
     while(true){
         sf::Packet packet;
         if(socket->receive(packet) != sf::Socket::Status::Done){
@@ -93,6 +92,48 @@ void draw_board(const sf::Font& font, std::shared_ptr<GameWorld> game_world, sf:
     horizontal_line.setFillColor(sf::Color::Black); 
     window.draw(horizontal_line);
 
+    // drawing the pieces on the board 
+    for(int i = 0; i<3; ++i){
+        for(int j = 0; j<3; ++j){
+            if(data.board[i][j] == BoardState::CIRCLE){
+                float circle_y = height / 3.f * (i + 1) - height_dx / 2; 
+                float circle_x = width / 3.f * (j + 1) - width_dx / 2; 
+
+                sf::CircleShape circle (50);
+                circle.setFillColor(sf::Color::Green);
+                circle.setPosition({circle_x, circle_y}); 
+                circle.setOrigin({50, 50});
+                window.draw(circle);
+            }
+
+            if(data.board[i][j] == BoardState::CROSS){
+                float circle_y = height / 3.f * (i + 1) - height_dx / 2; 
+                float circle_x = width / 3.f * (j + 1) - width_dx / 2; 
+                
+                sf::CircleShape circle (50);
+                circle.setFillColor(sf::Color::Cyan);
+                circle.setPosition({circle_x, circle_y}); 
+                circle.setOrigin({50, 50});
+                window.draw(circle);
+            }
+        }
+    }
+
+}
+
+void sendData(sf::Event& event, sf::RenderWindow& window, std::shared_ptr<sf::TcpSocket> socket){
+    // sending data I guess
+    int mouse_x = event.mouseButton.x; 
+    int mouse_y = event.mouseButton.y;
+
+    // sending that position packet 
+    float width_dx = window.getSize().x / 3.f;
+    float height_dy = window.getSize().y / 3.f;
+
+    int position_x = static_cast<int> (mouse_x / width_dx);
+    int position_y = static_cast<int> (mouse_y / height_dy);
+
+    std::cout << "Position x: " << position_x << " position y: " << position_y << std::endl;
 
 }
 
@@ -132,6 +173,8 @@ int main(){
             if (event.type == sf::Event::Closed)
                 window.close();
             
+            if(event.type == sf::Event::MouseButtonReleased)
+                sendData(event, window, socket);
         }
 
         window.display();
