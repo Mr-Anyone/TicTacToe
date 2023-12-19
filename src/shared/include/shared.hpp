@@ -33,6 +33,10 @@ struct NetworkPacket{
     Player player; 
 }; 
 
+struct UpdatePositionPacket{
+    int x, y;
+}; 
+
 NetworkPacket makeNewNetworkPacket();
 std::ostream& operator<<(std::ostream& os, const NetworkPacket& packet); 
 
@@ -43,4 +47,6 @@ sf::Packet& operator<< (sf::Packet& packet, const Turn& state);
 sf::Packet& operator >> (sf::Packet& packet, Turn& state);
 sf::Packet& operator << (sf::Packet& packet, const NetworkPacket& data);
 sf::Packet& operator >> (sf::Packet& packet, NetworkPacket& data);
+sf::Packet& operator >> (sf::Packet& packet, UpdatePositionPacket& data);
+sf::Packet& operator << (sf::Packet& packet, const UpdatePositionPacket& data);
 #endif

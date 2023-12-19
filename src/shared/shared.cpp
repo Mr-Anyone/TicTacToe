@@ -87,3 +87,13 @@ std::ostream& operator<<(std::ostream& os, const NetworkPacket& packet){
 
     return os;
 }
+
+
+sf::Packet& operator >> (sf::Packet& packet, UpdatePositionPacket& data){
+    packet >> data.x >> data.y;
+    return packet;
+}
+sf::Packet& operator << (sf::Packet& packet, const UpdatePositionPacket& data){
+    packet << data.x << data.y;
+    return packet;
+}

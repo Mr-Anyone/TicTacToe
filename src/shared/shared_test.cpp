@@ -37,9 +37,31 @@ bool casting_test(){
     return true;
 }
 
+bool casting_test_2(){
+    sf::Packet packet; 
+    UpdatePositionPacket data; 
+    data.x = 100; 
+    data.y =200;
+
+    packet << data; 
+    UpdatePositionPacket new_data; 
+    packet >> new_data; 
+
+    if(new_data.x == data.x || new_data.y == data.y){
+        return true;
+    }
+
+    return false;
+}
+
 int main(){
     if(!casting_test()){
         std::cout << "Casting Test Failed" << std::endl;
+        return -1;
+    }
+
+    if(!casting_test_2()){
+        std::cout << "Casting Test 2 Failed" << std::endl; 
         return -1;
     }
     std::cout << "Casting Test Passed" << std::endl;

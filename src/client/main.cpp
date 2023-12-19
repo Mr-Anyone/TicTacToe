@@ -25,11 +25,13 @@ void background_update(std::shared_ptr<sf::TcpSocket> socket, std::shared_ptr<Ga
             std::cout << "cannot receive packet for some reason: exit code" << std::endl;
             exit(-1);
         }
+        NetworkPacket data; 
+        packet >> data; 
+        game_world->updatePacket(data);
 
         std::this_thread::sleep_for(std::chrono::milliseconds (500));
     }
 }
-
 
 void draw_board(const sf::Font& font, std::shared_ptr<GameWorld> game_world, sf::RenderWindow& window){
     // clearing the screen
@@ -62,8 +64,10 @@ void draw_board(const sf::Font& font, std::shared_ptr<GameWorld> game_world, sf:
         text.setFillColor(sf::Color::Blue); 
         switch(data.turn){
             case Turn::CIRCLE_TURN: 
-                break; 
+                text.setString("Turn: Circle"); 
+                break;
             case Turn::CROSS_TURN:
+                text.setString("Turn: Cross"); 
                 break;
         }
         window.draw(text);
@@ -121,7 +125,13 @@ void draw_board(const sf::Font& font, std::shared_ptr<GameWorld> game_world, sf:
 
 }
 
-void sendData(sf::Event& event, sf::RenderWindow& window, std::shared_ptr<sf::TcpSocket> socket){
+void sendData(sf::Event& event, sf::RenderWindow& window, std::shared_ptr<GameWorld> world, std::shared_ptr<sf::TcpSocket> socket){
+    // not your turn do not send packet
+    NetworkPacket data = world->getPacket(); 
+    if(data.player != data.turn){
+        return;
+    }
+
     // sending data I guess
     int mouse_x = event.mouseButton.x; 
     int mouse_y = event.mouseButton.y;
@@ -133,7 +143,17 @@ void sendData(sf::Event& event, sf::RenderWindow& window, std::shared_ptr<sf::Tc
     int position_x = static_cast<int> (mouse_x / width_dx);
     int position_y = static_cast<int> (mouse_y / height_dy);
 
-    std::cout << "Position x: " << position_x << " position y: " << position_y << std::endl;
+    UpdatePositionPacket updatePosition;
+    updatePosition.x = position_y; 
+    updatePosition.y = position_x; 
+    sf::Packet packet; 
+    packet << updatePosition; 
+    
+    std::cout << "I am sending packet" << std::endl;
+    if(socket->send(packet) != sf::Socket::Status::Done){
+        std::cout << "We have lost packet" << std::endl; 
+        exit(-1);
+    }
 
 }
 
@@ -174,7 +194,7 @@ int main(){
                 window.close();
             
             if(event.type == sf::Event::MouseButtonReleased)
-                sendData(event, window, socket);
+                sendData(event, window, game_world, socket);
         }
 
         window.display();
