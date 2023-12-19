@@ -159,7 +159,8 @@ void sendData(sf::Event& event, sf::RenderWindow& window, std::shared_ptr<GameWo
 
 int main(){
     std::string ip_address;
-    std:: cin >> ip_address; 
+    std::cout << "ip address input: ";
+    std::cin >> ip_address; 
     std::cout << "connecting to address: " << ip_address << std::endl;
     
     int port = 10000;

@@ -20,7 +20,6 @@ void send_packet(sf::TcpSocket& socket, NetworkPacket& data){
 int main(){
     sf::TcpListener listener;
     NetworkPacket global_state = makeNewNetworkPacket();
-    global_state.board[0][0] = BoardState::CIRCLE;
 
 
     if (listener.listen(10000) != sf::Socket::Status::Done){
