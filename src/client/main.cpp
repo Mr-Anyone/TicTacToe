@@ -158,7 +158,10 @@ void sendData(sf::Event& event, sf::RenderWindow& window, std::shared_ptr<GameWo
 }
 
 int main(){
-    std::string ip_address = "127.0.0.1";
+    std::string ip_address;
+    std:: cin >> ip_address; 
+    std::cout << "connecting to address: " << ip_address << std::endl;
+    
     int port = 10000;
     sf::IpAddress address = sf::IpAddress::resolve(ip_address).value();
     
@@ -179,7 +182,7 @@ int main(){
 
     //loading font
     sf::Font font;
-    if(!font.loadFromFile("C:\\Users\\Vince\\Documents\\vscode\\TicTacToe\\Starborn.ttf")){
+    if(!font.loadFromFile("Starborn.ttf")){
         std::cout << "cannot load font" << std::endl; 
         return -1;
     }
